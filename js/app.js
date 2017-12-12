@@ -2,6 +2,23 @@
  * Create a list that holds all of your cards
  */
 
+//object that holds all of the cards
+const cards = [
+    {"name": "fa-diamond"},
+    {"name": "fa-paper-plano-o"},
+    {"name": "fa-anchor"},
+    {"name": "fa-bolt"},
+    {"name": "fa-cube"},
+    {"name": "fa-leaf"},
+    {"name": "fa-bicycle"},
+    {"name": "fa-bomb"}
+];
+
+
+$('.card').('click', function (evt) {
+    $(evt.target).addClass('open show');
+});
+
 
 /*
  * Display the cards on the page
@@ -11,19 +28,19 @@
  */
 
 // Shuffle function from http://stackoverflow.com/a/2450976
-function shuffle(array) {
-    var currentIndex = array.length, temporaryValue, randomIndex;
-
-    while (currentIndex !== 0) {
-        randomIndex = Math.floor(Math.random() * currentIndex);
-        currentIndex -= 1;
-        temporaryValue = array[currentIndex];
-        array[currentIndex] = array[randomIndex];
-        array[randomIndex] = temporaryValue;
-    }
-
-    return array;
-}
+// function shuffle(array) {
+//     var currentIndex = array.length, temporaryValue, randomIndex;
+//
+//     while (currentIndex !== 0) {
+//         randomIndex = Math.floor(Math.random() * currentIndex);
+//         currentIndex -= 1;
+//         temporaryValue = array[currentIndex];
+//         array[currentIndex] = array[randomIndex];
+//         array[randomIndex] = temporaryValue;
+//     }
+//
+//     return array;
+// }
 
 
 /*
