@@ -15,7 +15,7 @@ const cards = [
 ];
 
 
-$('.card').('click', function (evt) {
+$('.card').on('click', function (evt) {
     $(evt.target).addClass('open show');
 });
 
