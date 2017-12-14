@@ -2,7 +2,7 @@
  * Create a list that holds all of your cards
  */
 
-var cards = ['diamond', 'paper-plan-o', 'anchor', 'bolt', 'cube', 'leaf', 'bicycle', 'bomb'];
+var cards = ['diamond', 'diamond','paper-plane-o', 'paper-plane-o','anchor', 'anchor','bolt', 'bolt', 'cube', 'cube','leaf', 'leaf','bicycle', 'bicycle','bomb', 'bomb'];
 
 /*
  * Display the cards on the page
@@ -11,34 +11,35 @@ var cards = ['diamond', 'paper-plan-o', 'anchor', 'bolt', 'cube', 'leaf', 'bicyc
  *   - add each card's HTML to the page
  */
 
-// Shuffle function from http://stackoverflow.com/a/2450976
-function shuffle(array) {
-    var currentIndex = array.length, temporaryValue, randomIndex;
-
-    while (currentIndex !== 0) {
-        randomIndex = Math.floor(Math.random() * currentIndex);
-        currentIndex -= 1;
-        temporaryValue = array[currentIndex];
-        array[currentIndex] = array[randomIndex];
-        array[randomIndex] = temporaryValue;
-    }
-
-    return array;
-};
-
-var deck = shuffle(cards);
-console.log(cards);
-
-var test = 'fa fa-' + deck[3];
-console.log(test);
-
-// function placeCards(array) {
-//     for (var i = 0; i <= array.length, i++) {
-
-
-
+// // Shuffle function from http://stackoverflow.com/a/2450976
+// function shuffle(array) {
+//     var currentIndex = array.length, temporaryValue, randomIndex;
 //
-$('.card i').addClass(test);
+//     while (currentIndex !== 0) {
+//         randomIndex = Math.floor(Math.random() * currentIndex);
+//         currentIndex -= 1;
+//         temporaryValue = array[currentIndex];
+//         array[currentIndex] = array[randomIndex];
+//         array[randomIndex] = temporaryValue;
+//     }
+//
+//     return array;
+// };
+//
+// var deck = shuffle(cards);
+// console.log(cards);
+
+function placeCards2(array) {
+    var index = 0;
+    $('.card i').each(function () {
+        var icon = 'fa fa-' + array[index];
+        $(this).addClass(icon);
+        index++;
+    });
+}
+placeCards2(cards);
+
+
 
 // event listener that add classes open show when card is clicked
 // $('.card').on('click', function (evt) {
