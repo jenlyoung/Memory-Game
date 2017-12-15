@@ -24,7 +24,7 @@ function shuffle(array) {
     }
 
     return array;
-};
+}
 
 var deck = shuffle(cards);
 // console.log(cards);
@@ -41,20 +41,14 @@ function placeCards2(array) {
 placeCards2(deck);
 //
 
-// event listener that add classes open show when card is clicked
+// event listener that add classes open show when card is clicked and icon to open cards array
+var openCards = [];
 var card = $('.card');
 card.on('click', function (evt) {
     $(evt.target).addClass('open show');
-    if (card.hasClass('open')) {
-        console.log("true");
-    }
+    openCards.push($(evt.target).children());
+    console.log(openCards);
 });
-//
-//
-// var openCards = [];
-
-//
-// addOpenCards();
 
 /*
  * set up the event listener for a card. If a card is clicked:
