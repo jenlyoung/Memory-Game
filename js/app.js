@@ -2,7 +2,7 @@
  * Create a list that holds all of your cards
  */
 
-var cards = ['diamond', 'diamond','paper-plane-o', 'paper-plane-o','anchor', 'anchor','bolt', 'bolt', 'cube', 'cube','leaf', 'leaf','bicycle', 'bicycle','bomb', 'bomb'];
+var cards = ['diamond', 'diamond', 'paper-plane-o', 'paper-plane-o', 'anchor', 'anchor', 'bolt', 'bolt', 'cube', 'cube', 'leaf', 'leaf', 'bicycle', 'bicycle', 'bomb', 'bomb'];
 
 /*
  * Display the cards on the page
@@ -12,23 +12,24 @@ var cards = ['diamond', 'diamond','paper-plane-o', 'paper-plane-o','anchor', 'an
  */
 
 // // Shuffle function from http://stackoverflow.com/a/2450976
-// function shuffle(array) {
-//     var currentIndex = array.length, temporaryValue, randomIndex;
-//
-//     while (currentIndex !== 0) {
-//         randomIndex = Math.floor(Math.random() * currentIndex);
-//         currentIndex -= 1;
-//         temporaryValue = array[currentIndex];
-//         array[currentIndex] = array[randomIndex];
-//         array[randomIndex] = temporaryValue;
-//     }
-//
-//     return array;
-// };
-//
-// var deck = shuffle(cards);
+function shuffle(array) {
+    var currentIndex = array.length, temporaryValue, randomIndex;
+
+    while (currentIndex !== 0) {
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex -= 1;
+        temporaryValue = array[currentIndex];
+        array[currentIndex] = array[randomIndex];
+        array[randomIndex] = temporaryValue;
+    }
+
+    return array;
+};
+
+var deck = shuffle(cards);
 // console.log(cards);
 
+//function that places an icon on each card
 function placeCards2(array) {
     var index = 0;
     $('.card i').each(function () {
@@ -37,14 +38,23 @@ function placeCards2(array) {
         index++;
     });
 }
-placeCards2(cards);
-
-
+placeCards2(deck);
+//
 
 // event listener that add classes open show when card is clicked
-// $('.card').on('click', function (evt) {
-//     $(evt.target).addClass('open show');
-// });
+var card = $('.card');
+card.on('click', function (evt) {
+    $(evt.target).addClass('open show');
+    if (card.hasClass('open')) {
+        console.log("true");
+    }
+});
+//
+//
+// var openCards = [];
+
+//
+// addOpenCards();
 
 /*
  * set up the event listener for a card. If a card is clicked:
