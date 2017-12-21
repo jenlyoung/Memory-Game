@@ -2,7 +2,26 @@
  * Create a list that holds all of your cards
  */
 
-var cards = ['diamond', 'diamond', 'paper-plane-o', 'paper-plane-o', 'anchor', 'anchor', 'bolt', 'bolt', 'cube', 'cube', 'leaf', 'leaf', 'bicycle', 'bicycle', 'bomb', 'bomb'];
+// var cards = ['diamond', 'diamond', 'paper-plane-o', 'paper-plane-o', 'anchor', 'anchor', 'bolt', 'bolt', 'cube', 'cube', 'leaf', 'leaf', 'bicycle', 'bicycle', 'bomb', 'bomb'];
+
+var cards = [
+    {"name": "diamond1", "icon": "fa fa-diamond"},
+    {"name": "diamond2", "icon": "fa fa-diamond"},
+    {"name": "plane1", "icon": "fa fa-paper-plane-o"},
+    {"name": "plane2", "icon": "fa fa-paper-plane-o"},
+    {"name": "anchor1", "icon": "fa fa-anchor"},
+    {"name": "anchor2", "icon": "fa fa-anchor"},
+    {"name": "bolt1", "icon": "fa fa-bolt"},
+    {"name": "bolt2", "icon": "fa fa-bolt"},
+    {"name": "cube1", "icon": "fa fa-cube"},
+    {"name": "cube2", "icon": "fa fa-cube"},
+    {"name": "leaf1", "icon": "fa fa-leaf"},
+    {"name": "leaf2", "icon": "fa fa-leaf"},
+    {"name": "bike1", "icon": "fa fa-bicycle"},
+    {"name": "bike2", "icon": "fa fa-bicycle"},
+    {"name": "bomb1", "icon": "fa fa-bomb"},
+    {"name": "bomb2", "icon": "fa fa-bomb"}
+];
 
 /*
  * Display the cards on the page
@@ -29,26 +48,70 @@ function shuffle(array) {
 var deck = shuffle(cards);
 // console.log(cards);
 
-//function that places an icon on each card
+// function that places an icon on each card
 function placeCards2(array) {
     var index = 0;
     $('.card i').each(function () {
-        var icon = 'fa fa-' + array[index];
+        var icon = cards[index].icon;
         $(this).addClass(icon);
         index++;
     });
 }
+
 placeCards2(deck);
-//
+console.log(deck);
+
 
 // event listener that add classes open show when card is clicked and icon to open cards array
 var openCards = [];
+var openClass = [];
 var card = $('.card');
-card.on('click', function (evt) {
-    $(evt.target).addClass('open show');
-    openCards.push($(evt.target).children());
-    console.log(openCards);
+
+// if cards do not match, cards flip over and arrays clear
+function flipCards() {
+    openClass[0].removeClass('open show');
+    openClass[1].removeClass('open show');
+    clearArray(openClass);
+    clearArray(openCards);
+}
+
+// clears the arrays
+function clearArray(array){
+    array.pop();
+    array.pop();
+}
+
+
+card.on('click', function () {
+    var clicked = $(this);
+    var picClass = $(clicked).children().attr("class");
+
+
+    clicked.addClass('open show');
+
+    if (openCards.length < 2) {
+        openClass.push(clicked);
+        openCards.push(picClass);
+    }
+
+    if (openCards.length === 2) {
+        if (openCards[0] !== openCards[1]) {
+            console.log("no match");
+            setTimeout(function () {
+                flipCards();
+            }, 2000);
+        }
+        else {
+            clearArray(openClass);
+            clearArray(openCards);
+        }
+    }
+
 });
+
+
+console.log(openCards);
+
 
 /*
  * set up the event listener for a card. If a card is clicked:
