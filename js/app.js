@@ -3,7 +3,7 @@
  */
 
 // var cards = ['diamond', 'diamond', 'paper-plane-o', 'paper-plane-o', 'anchor', 'anchor', 'bolt', 'bolt', 'cube', 'cube', 'leaf', 'leaf', 'bicycle', 'bicycle', 'bomb', 'bomb'];
-
+//variable for the cards
 var cards = [
     {"name": "diamond1", "icon": "fa fa-diamond"},
     {"name": "diamond2", "icon": "fa fa-diamond"},
@@ -22,6 +22,9 @@ var cards = [
     {"name": "bomb1", "icon": "fa fa-bomb"},
     {"name": "bomb2", "icon": "fa fa-bomb"}
 ];
+
+//variable for the restart button
+var restart = $('.restart');
 
 /*
  * Display the cards on the page
@@ -60,6 +63,16 @@ function placeCards2(array) {
 
 placeCards2(deck);
 console.log(deck);
+
+
+//event listener to restart game
+restart.on('click', function(){
+    $('.card').removeClass('open show');
+    $('.card i').removeClass();
+    placeCards2(shuffle(deck));
+    console.log("working");
+    console.log(deck);
+})
 
 
 // event listener that add classes open show when card is clicked and icon to open cards array
