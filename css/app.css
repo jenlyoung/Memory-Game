@@ -101,9 +101,14 @@ h1 {
 .score-panel .stars li {
     list-style: none;
     display: inline-block;
+    color: blue;
 }
 
 .score-panel .restart {
     float: right;
     cursor: pointer;
+}
+
+.score-panel .stars li .wrong {
+    color: red;
 }
