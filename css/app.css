@@ -80,7 +80,11 @@ h1 {
     background: #02ccba;
     font-size: 33px;
 }
-
+.deck .card.fail {
+    cursor: default;
+    background: indianred;
+    font-size: 33px;
+}
 /*
  * Styles for the Score Panel
  */
@@ -111,4 +115,22 @@ h1 {
 
 .score-panel .stars li .wrong {
     color: red;
+}
+
+.bounce {
+    -moz-animation-duration: 3s;
+    -webkit-animation-duration: 3s;
+    -moz-animation-name: bounce;
+    -webkit-animation-name: bounce;
+}
+
+@-webkit-keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {-webkit-transform: translateY(0);}
+    40% {-webkit-transform: translateY(-30px);}
+    60% {-webkit-transform: translateY(-15px);}
+}
+@-moz-keyframes bounce  {
+    0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+    40% {transform: translateY(-30px);}
+    60% {transform: translateY(-15px);}
 }

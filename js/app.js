@@ -64,15 +64,16 @@ function placeCards2(array) {
 placeCards2(deck);
 console.log(deck);
 
-
 //event listener to restart game
-restart.on('click', function(){
+restart.on('click', function () {
     $('.card').removeClass('open show');
     $('.card i').removeClass();
-    placeCards2(shuffle(deck));
+    $('.stars i').removeClass('wrong');
+    placeCards2(deck);
+
     console.log("working");
     console.log(deck);
-})
+});
 
 
 // event listener that add classes open show when card is clicked and icon to open cards array
@@ -80,18 +81,53 @@ var openCards = [];
 var openClass = [];
 var card = $('.card');
 
+
+
+function matchCards(){
+    openCards[0].addClass('match bounce');
+    openCards[1].addClass('match bounce');
+}
+
+function wrongCards(){
+    openCards[0].addClass('fail bounce');
+    openCards[1].addClass('fail bounce');
+    // clearArray(openClass);
+    // clearArray(openCards);
+    placeStars(wrongAnswer);
+}
+// clears the arrays
+function clearArray(array) {
+    array.pop();
+    array.pop();
+}
 // if cards do not match, cards flip over and arrays clear
 function flipCards() {
-    openClass[0].removeClass('open show');
-    openClass[1].removeClass('open show');
+    openCards[0].removeClass('open show fail bounce');
+    openCards[1].removeClass('open show fail bounce');
     clearArray(openClass);
     clearArray(openCards);
 }
 
-// clears the arrays
-function clearArray(array){
-    array.pop();
-    array.pop();
+//changes the number of moves
+var moves = 0;
+ card.on('click', function(){
+        moves ++;
+        $('.moves').html(moves);
+    });
+
+var correctPairs = 0;
+//function that colors the stars if there is a wrong answer
+var wrongAnswer = 1;
+function placeStars(x) {
+    if (x === 1){
+        $('.star-1').addClass('wrong');
+    }
+    if (x === 2) {
+        $('.star-2').addClass('wrong');
+    }
+    if (x === 3) {
+        $('.star-3').addClass('wrong');
+    }
 }
 
 
@@ -99,31 +135,42 @@ card.on('click', function () {
     var clicked = $(this);
     var picClass = $(clicked).children().attr("class");
 
-
     clicked.addClass('open show');
 
     if (openCards.length < 2) {
-        openClass.push(clicked);
-        openCards.push(picClass);
+        openCards.push(clicked);
+        openClass.push(picClass);
     }
 
     if (openCards.length === 2) {
-        if (openCards[0] !== openCards[1]) {
+
+        if (openClass[0] !== openClass[1]) {
             console.log("no match");
+            wrongCards();
+            // placeStars(wrongAnswer);
+            // flipCards();
+            wrongAnswer++;
             setTimeout(function () {
                 flipCards();
             }, 2000);
         }
         else {
+            matchCards();
             clearArray(openClass);
             clearArray(openCards);
+            correctPairs++;
         }
     }
 
+    if (correctPairs === 8){
+        alert("You Win!");
+    }
 });
 
 
+
 console.log(openCards);
+
 
 
 /*
