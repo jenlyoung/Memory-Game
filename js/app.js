@@ -4,7 +4,7 @@
 
 // var cards = ['diamond', 'diamond', 'paper-plane-o', 'paper-plane-o', 'anchor', 'anchor', 'bolt', 'bolt', 'cube', 'cube', 'leaf', 'leaf', 'bicycle', 'bicycle', 'bomb', 'bomb'];
 //variable for the cards
-var cards = [
+const cards = [
     {"name": "diamond1", "icon": "fa fa-diamond"},
     {"name": "diamond2", "icon": "fa fa-diamond"},
     {"name": "plane1", "icon": "fa fa-paper-plane-o"},
@@ -23,16 +23,30 @@ var cards = [
     {"name": "bomb2", "icon": "fa fa-bomb"}
 ];
 
-//variable for the restart button
-var restart = $('.restart');
-var card = $('.card');
-var cardIcon = $('.card i');
-var stars = $('.stars i');
-var moveCount = $('.moves');
-var openCards = [];
-var openClass = [];
-var startTime = null;
-var endTime = null;
+//variables for cards
+const card = $('.card');
+cardIcon = $('.card i');
+
+//variable for restart
+const restart = $('.restart');
+
+// variables for placing cards
+const deck = shuffle(cards);
+
+// variables for stars
+const stars = $('.stars i');
+
+//variable for onclick
+const moveCount = $('.moves');
+openCards = [];
+openClass = [];
+let moves = 0;
+correctPairs = 1;
+wrongAnswer = 1;
+
+//variables for time counter
+startTime = null;
+endTime = null;
 
 /*
  * Display the cards on the page
@@ -57,13 +71,12 @@ function shuffle(array) {
 }
 
 // function that places an icon on each card
-var deck = shuffle(cards);
 
 function placeCards2(array) {
-    var index = 0;
+    let index = 0;
     moveCount.html('0');
     cardIcon.each(function () {
-        var icon = cards[index].icon;
+        let icon = cards[index].icon;
         $(this).addClass(icon);
         index++;
     });
@@ -80,23 +93,26 @@ restart.on('click', function () {
     stars.removeClass('wrong');
     moveCount.html('0');
     placeCards2(deck);
-    // console.log("working");
+    console.log("working");
     console.log(deck);
 });
 
 //function that adds match and bounce animation is cards match
 function matchCards() {
-    openCards[0].addClass('match bounce');
-    openCards[1].addClass('match bounce');
+    for (const openCard of openCards) {
+        openCard.addClass('match bounce');
+    }
+    // openCards[0].addClass('match bounce');
+    // openCards[1].addClass('match bounce');
 }
 
 //function that adds class fail and bounce to cards if they don't match and colors in a star
 function wrongCards() {
-    // for (const openCard of openCards){
-    //     openCard.addClass('fail bounce');
-    // }
-    openCards[0].addClass('fail bounce');
-    openCards[1].addClass('fail bounce');
+    for (const openCard of openCards) {
+        openCard.addClass('fail bounce');
+    }
+    // openCards[0].addClass('fail bounce');
+    // openCards[1].addClass('fail bounce');
     placeStars(wrongAnswer);
 }
 
@@ -107,19 +123,14 @@ function clearArray(array) {
 
 // if cards do not match, cards flip over and arrays clear
 function flipCards() {
-    openCards[0].removeClass('open show fail bounce');
-    openCards[1].removeClass('open show fail bounce');
+    for (const openCard of openCards) {
+        openCard.removeClass('open show fail bounce');
+    }
+    // openCards[0].removeClass('open show fail bounce');
+    // openCards[1].removeClass('open show fail bounce');
     clearArray(openClass);
     clearArray(openCards);
 }
-
-//changes the number of moves
-var moves = 0;
-/*
-card.on('click', function () {
-
-});
-*/
 
 //function that colors the stars if there is a wrong answer
 function placeStars(x) {
@@ -135,41 +146,39 @@ function placeStars(x) {
 }
 
 function gameOver() {
-    if (wrongAnswer === 4){
+    if (wrongAnswer === 4) {
         alert("Sorry, Game Over!");
     }
 }
 
 function winGame() {
     if (correctPairs === 2) {
-        if(!endTime){
+        if (!endTime) {
             endTime = new Date();
         }
-        var resultInSeconds = diffTime(endTime, startTime);
+        let resultInSeconds = diffTime(endTime, startTime);
         console.log("end time" + endTime);
         alert("You Won in" + resultInSeconds + "seconds");
     }
 }
 
-function diffTime(t2, t1){
-    var diffTime = t2.getTime() - t1.getTime(); // This will give difference in milliseconds
-    var resultInSeconds = Math.round(diffTime / 1000);
+// function gets the result of time elapsed in seconds
+function diffTime(t2, t1) {
+    let diffTime = t2.getTime() - t1.getTime(); // This will give difference in milliseconds
+    let resultInSeconds = Math.round(diffTime / 1000);
     return resultInSeconds;
 }
 
-
-var correctPairs = 1;
-var wrongAnswer = 1;
-
+// event listener that works when a card  is clicked
 card.on('click', function () {
-    if(!startTime){
+    if (!startTime) {
         startTime = new Date();
     }
     moves++;
     $('.moves').html(moves);
     console.log(startTime);
-    var clicked = $(this);
-    var picClass = $(clicked).children().attr("class");
+    let clicked = $(this);
+    let picClass = $(clicked).children().attr("class");
 
     clicked.addClass('open show');
 
@@ -190,6 +199,7 @@ card.on('click', function () {
             wrongAnswer++;
             console.log(wrongAnswer);
         }
+
         else {
             matchCards();
             clearArray(openClass);
