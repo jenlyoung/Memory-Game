@@ -25,6 +25,14 @@ var cards = [
 
 //variable for the restart button
 var restart = $('.restart');
+var card = $('.card');
+var cardIcon = $('.card i');
+var stars = $('.stars i');
+var moveCount = $('.moves');
+var openCards = [];
+var openClass = [];
+var startTime = null;
+var endTime = null;
 
 /*
  * Display the cards on the page
@@ -48,13 +56,13 @@ function shuffle(array) {
     return array;
 }
 
-var deck = shuffle(cards);
-// console.log(cards);
-
 // function that places an icon on each card
+var deck = shuffle(cards);
+
 function placeCards2(array) {
     var index = 0;
-    $('.card i').each(function () {
+    moveCount.html('0');
+    cardIcon.each(function () {
         var icon = cards[index].icon;
         $(this).addClass(icon);
         index++;
@@ -62,44 +70,41 @@ function placeCards2(array) {
 }
 
 placeCards2(deck);
-console.log(deck);
+
 
 //event listener to restart game
 restart.on('click', function () {
-    $('.card').removeClass('open show');
-    $('.card i').removeClass();
-    $('.stars i').removeClass('wrong');
+    startTime = null;
+    card.removeClass('open show match fail bounce');
+    cardIcon.removeClass();
+    stars.removeClass('wrong');
+    moveCount.html('0');
     placeCards2(deck);
-
-    console.log("working");
+    // console.log("working");
     console.log(deck);
 });
 
-
-// event listener that add classes open show when card is clicked and icon to open cards array
-var openCards = [];
-var openClass = [];
-var card = $('.card');
-
-
-
-function matchCards(){
+//function that adds match and bounce animation is cards match
+function matchCards() {
     openCards[0].addClass('match bounce');
     openCards[1].addClass('match bounce');
 }
 
-function wrongCards(){
+//function that adds class fail and bounce to cards if they don't match and colors in a star
+function wrongCards() {
+    // for (const openCard of openCards){
+    //     openCard.addClass('fail bounce');
+    // }
     openCards[0].addClass('fail bounce');
     openCards[1].addClass('fail bounce');
-    // clearArray(openClass);
-    // clearArray(openCards);
     placeStars(wrongAnswer);
 }
+
 // clears the arrays
 function clearArray(array) {
-    array.pop();
-    array.pop();
+    array.splice(0, 2);
 }
+
 // if cards do not match, cards flip over and arrays clear
 function flipCards() {
     openCards[0].removeClass('open show fail bounce');
@@ -110,16 +115,15 @@ function flipCards() {
 
 //changes the number of moves
 var moves = 0;
- card.on('click', function(){
-        moves ++;
-        $('.moves').html(moves);
-    });
+/*
+card.on('click', function () {
 
-var correctPairs = 0;
+});
+*/
+
 //function that colors the stars if there is a wrong answer
-var wrongAnswer = 1;
 function placeStars(x) {
-    if (x === 1){
+    if (x === 1) {
         $('.star-1').addClass('wrong');
     }
     if (x === 2) {
@@ -130,8 +134,40 @@ function placeStars(x) {
     }
 }
 
+function gameOver() {
+    if (wrongAnswer === 4){
+        alert("Sorry, Game Over!");
+    }
+}
+
+function winGame() {
+    if (correctPairs === 2) {
+        if(!endTime){
+            endTime = new Date();
+        }
+        var resultInSeconds = diffTime(endTime, startTime);
+        console.log("end time" + endTime);
+        alert("You Won in" + resultInSeconds + "seconds");
+    }
+}
+
+function diffTime(t2, t1){
+    var diffTime = t2.getTime() - t1.getTime(); // This will give difference in milliseconds
+    var resultInSeconds = Math.round(diffTime / 1000);
+    return resultInSeconds;
+}
+
+
+var correctPairs = 1;
+var wrongAnswer = 1;
 
 card.on('click', function () {
+    if(!startTime){
+        startTime = new Date();
+    }
+    moves++;
+    $('.moves').html(moves);
+    console.log(startTime);
     var clicked = $(this);
     var picClass = $(clicked).children().attr("class");
 
@@ -147,30 +183,27 @@ card.on('click', function () {
         if (openClass[0] !== openClass[1]) {
             console.log("no match");
             wrongCards();
-            // placeStars(wrongAnswer);
-            // flipCards();
-            wrongAnswer++;
             setTimeout(function () {
                 flipCards();
+                gameOver();
             }, 2000);
+            wrongAnswer++;
+            console.log(wrongAnswer);
         }
         else {
             matchCards();
             clearArray(openClass);
             clearArray(openCards);
             correctPairs++;
+            setTimeout(function () {
+                winGame();
+            }, 2000);
         }
-    }
-
-    if (correctPairs === 8){
-        alert("You Win!");
     }
 });
 
 
-
 console.log(openCards);
-
 
 
 /*
