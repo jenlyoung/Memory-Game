@@ -24,29 +24,32 @@ const cards = [
 ];
 
 //variables for cards
-const card = $('.card');
-cardIcon = $('.card i');
+const card = $('.card'),
+    cardIcon = $('.card i');
 
 //variable for restart
 const restart = $('.restart');
 
-// variables for placing cards
-const deck = shuffle(cards);
-
 // variables for stars
 const stars = $('.stars i');
 
-//variable for onclick
-const moveCount = $('.moves');
-openCards = [];
-openClass = [];
-let moves = 0;
-correctPairs = 1;
-wrongAnswer = 1;
+//variables for onclick
+const moveCount = $('.moves'),
+    openCards = [],
+    openClass = [];
+let moves = 0,
+    correctPairs = 0,
+    wrongAnswer = 1,
+    isClicked = false,
 
 //variables for time counter
-startTime = null;
-endTime = null;
+    startTime = null,
+    endTime = null;
+
+//variables for modal
+var modal = document.querySelector(".modal");
+var trigger = document.querySelector(".trigger");
+var closeButton = document.querySelector(".close-button");
 
 /*
  * Display the cards on the page
@@ -66,13 +69,11 @@ function shuffle(array) {
         array[currentIndex] = array[randomIndex];
         array[randomIndex] = temporaryValue;
     }
-
     return array;
 }
 
 // function that places an icon on each card
-
-function placeCards2(array) {
+function placeCards(array) {
     let index = 0;
     moveCount.html('0');
     cardIcon.each(function () {
@@ -81,19 +82,21 @@ function placeCards2(array) {
         index++;
     });
 }
-
-placeCards2(deck);
+placeCards(shuffle(cards));
 
 
 //event listener to restart game
 restart.on('click', function () {
     startTime = null;
-    card.removeClass('open show match fail bounce');
+    endTime = null;
+    card.removeClass('open show match fail bounce locked');
     cardIcon.removeClass();
     stars.removeClass('wrong');
     moveCount.html('0');
-    placeCards2(deck);
-    console.log("working");
+    moves = 0;
+    wrongAnswer = 1;
+    correctPairs = 0;
+    placeCards(shuffle(cards));
     console.log(deck);
 });
 
@@ -102,8 +105,6 @@ function matchCards() {
     for (const openCard of openCards) {
         openCard.addClass('match bounce');
     }
-    // openCards[0].addClass('match bounce');
-    // openCards[1].addClass('match bounce');
 }
 
 //function that adds class fail and bounce to cards if they don't match and colors in a star
@@ -111,25 +112,25 @@ function wrongCards() {
     for (const openCard of openCards) {
         openCard.addClass('fail bounce');
     }
-    // openCards[0].addClass('fail bounce');
-    // openCards[1].addClass('fail bounce');
     placeStars(wrongAnswer);
 }
 
 // clears the arrays
-function clearArray(array) {
-    array.splice(0, 2);
+function clearArray() {
+    openCards.splice(0,2);
+    openClass.splice(0,2);
 }
 
 // if cards do not match, cards flip over and arrays clear
 function flipCards() {
-    for (const openCard of openCards) {
-        openCard.removeClass('open show fail bounce');
+    if (wrongAnswer < 4) {
+        for (const openCard of openCards) {
+            openCard.removeClass('open show fail bounce locked');
+        }
     }
-    // openCards[0].removeClass('open show fail bounce');
-    // openCards[1].removeClass('open show fail bounce');
-    clearArray(openClass);
-    clearArray(openCards);
+    else {
+        gameOver();
+    }
 }
 
 //function that colors the stars if there is a wrong answer
@@ -145,20 +146,27 @@ function placeStars(x) {
     }
 }
 
+function move() {
+    moves++;
+    $('.moves').html(moves);
+}
+
 function gameOver() {
     if (wrongAnswer === 4) {
-        alert("Sorry, Game Over!");
+        // toggleModal();
+        alert("you loose");
     }
 }
 
 function winGame() {
-    if (correctPairs === 2) {
-        if (!endTime) {
-            endTime = new Date();
-        }
-        let resultInSeconds = diffTime(endTime, startTime);
-        console.log("end time" + endTime);
-        alert("You Won in" + resultInSeconds + "seconds");
+    if (correctPairs === 8) {
+        // if (!endTime) {
+        //     endTime = new Date();
+        // }
+        // let resultInSeconds = diffTime(endTime, startTime);
+        // toggleModal();
+        // console.log("end time" + endTime);
+        alert("You win!");
     }
 }
 
@@ -169,52 +177,137 @@ function diffTime(t2, t1) {
     return resultInSeconds;
 }
 
-// event listener that works when a card  is clicked
 card.on('click', function () {
-    if (!startTime) {
-        startTime = new Date();
-    }
-    moves++;
-    $('.moves').html(moves);
-    console.log(startTime);
     let clicked = $(this);
     let picClass = $(clicked).children().attr("class");
 
-    clicked.addClass('open show');
+    //if array if full, clear the array
+    if (openCards.length === 2) {
+        clearArray();
+    }
+    //
+    // if (openClass.length === 2) {
+    //     clearArray(openClass);
+    // }
 
-    if (openCards.length < 2) {
+    // card open already, exit
+    if (clicked.hasClass('locked')) {
+        return;
+    }
+
+    // when clicked
+    isClicked = true;
+
+    // if (!startTime) {
+    //     startTime = new Date();
+    // }
+    // console.log(startTime);
+
+    //
+    if (isClicked === true) {
         openCards.push(clicked);
         openClass.push(picClass);
+        clicked.addClass('open show locked');
+        move();
     }
 
     if (openCards.length === 2) {
-
-        if (openClass[0] !== openClass[1]) {
-            console.log("no match");
-            wrongCards();
-            setTimeout(function () {
-                flipCards();
-                gameOver();
-            }, 2000);
-            wrongAnswer++;
-            console.log(wrongAnswer);
-        }
-
-        else {
+        //match
+        if (openClass[0] === openClass[1]) {
             matchCards();
-            clearArray(openClass);
-            clearArray(openCards);
             correctPairs++;
             setTimeout(function () {
                 winGame();
-            }, 2000);
+                isClicked = false;
+            }, 800);
         }
+        //no match
+        else {
+            wrongCards();
+            wrongAnswer++;
+            console.log(wrongAnswer);
+            setTimeout(function () {
+                flipCards();
+                isClicked = false;
+            }, 800);
+        }
+    }
+    else {
+        isClicked = false;
     }
 });
 
+// // event listener that works when a card  is clicked
+// card.on('click', function () {
+//     let clicked = $(this);
+//     let picClass = $(clicked).children().attr("class");
+//
+//     if (isClicked) {
+//         return
+//     }
+//
+//     if (clicked.hasClass('locked')){
+//         return;
+//     }
+//
+//     isClicked = true;
+//
+//     if (!startTime) {
+//         startTime = new Date();
+//     }
+//     console.log(startTime);
+//
+//     move();
+//
+//     clicked.addClass('open show locked');
+//
+//     if (openCards.length < 2) {
+//         openCards.push(clicked);
+//         openClass.push(picClass);
+//     }
+//
+//     if (openCards.length === 2) {
+//
+//         if (openClass[0] !== openClass[1]) {
+//             console.log(openCards);
+//             wrongCards();
+//             wrongAnswer++;
+//             console.log(wrongAnswer);
+//             setTimeout(function () {
+//                 flipCards();
+//                 // gameOver();
+//                 isClicked = false;
+//             }, 800);
+//             // wrongAnswer++;
+//             // console.log(wrongAnswer);
+//         }
+//         else {
+//             console.log(openCards);
+//             matchCards();
+//             clearArray(openClass);
+//             clearArray(openCards);
+//             correctPairs++;
+//             winGame();
+//             isClicked = false;
+//             // setTimeout(function () {
+//             //     winGame();
+//             // }, 2000);
+//         }
+//     } else {
+//         isClicked = false;
+//     }
+// });
+//
 
 console.log(openCards);
 
+
+// function toggleModal() {
+//     $('.modal-content').html("<h>test</h>");
+//     modal.classList.toggle("show-modal");
+// }
+
+// closeButton.addEventListener("click", toggleModal);
 
 /*
  * set up the event listener for a card. If a card is clicked:
