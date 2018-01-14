@@ -41,10 +41,12 @@ let moves = 0,
     correctPairs = 0,
     wrongAnswer = 1,
     isClicked = false,
+    timeIntervalId,
 
 //variables for time counter
     startTime = null,
     endTime = null;
+
 
 //variables for modal
 var modal = document.querySelector(".modal");
@@ -123,13 +125,13 @@ function clearArray() {
 
 // if cards do not match, cards flip over and arrays clear
 function flipCards() {
-    if (wrongAnswer < 4) {
+    if (wrongAnswer < 5) {
         for (const openCard of openCards) {
             openCard.removeClass('open show fail bounce locked');
         }
     }
     else {
-        gameOver();
+        // gameOver();
     }
 }
 
@@ -144,6 +146,10 @@ function placeStars(x) {
     if (x === 3) {
         $('.star-3').addClass('wrong');
     }
+    if (x === 4) {
+        $('.star-4').addClass('wrong');
+    }
+
 }
 
 function move() {
@@ -151,31 +157,51 @@ function move() {
     $('.moves').html(moves);
 }
 
-function gameOver() {
-    if (wrongAnswer === 4) {
-        // toggleModal();
-        alert("you loose");
+function endGame() {
+    const isGameOver = wrongAnswer === 5 || correctPairs === 8;
+    if (!isGameOver){
+        return;
     }
+    if (wrongAnswer === 5) {
+        // toggleModal();
+        console.log("game over");
+    }
+    if (correctPairs === 8) {
+        console.log("you win");
+    }
+    clearInterval(timeIntervalId);
 }
 
-function winGame() {
-    if (correctPairs === 8) {
-        // if (!endTime) {
-        //     endTime = new Date();
-        // }
-        // let resultInSeconds = diffTime(endTime, startTime);
-        // toggleModal();
-        // console.log("end time" + endTime);
-        alert("You win!");
-    }
+function startGame() {
+    startTime = new Date().getTime();
+
+    // Update the count down every 1 second
+    timeIntervalId = setInterval(function() {
+        console.log("h");
+        // Get current time
+        let currentTime = new Date().getTime();
+
+        // have the startTime begin at 0
+        let totalTime =  currentTime - startTime;
+
+        // Time calculations for days, hours, minutes and seconds
+        var days = Math.floor(totalTime / (1000 * 60 * 60 * 24));
+        var hours = Math.floor((totalTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        var minutes = Math.floor((totalTime % (1000 * 60 * 60)) / (1000 * 60));
+        var seconds = Math.floor((totalTime % (1000 * 60)) / 1000);
+
+        // Output the result in an element with id="timer"
+        document.getElementById("timer").innerHTML = days + "d " + hours + "h "
+            + minutes + "m " + seconds + "s ";
+    }, 1000);
 }
 
 // function gets the result of time elapsed in seconds
-function diffTime(t2, t1) {
-    let diffTime = t2.getTime() - t1.getTime(); // This will give difference in milliseconds
-    let resultInSeconds = Math.round(diffTime / 1000);
-    return resultInSeconds;
-}
+// function diffTime(t2, t1) {
+//     let diffTime = t2.getTime() - t1.getTime(); // This will give difference in milliseconds
+//     let resultInSeconds = Math.round(diffTime / 1000);
+//     return resultInSeconds;
+// }
 
 card.on('click', function () {
     let clicked = $(this);
@@ -185,10 +211,6 @@ card.on('click', function () {
     if (openCards.length === 2) {
         clearArray();
     }
-    //
-    // if (openClass.length === 2) {
-    //     clearArray(openClass);
-    // }
 
     // card open already, exit
     if (clicked.hasClass('locked')) {
@@ -198,10 +220,9 @@ card.on('click', function () {
     // when clicked
     isClicked = true;
 
-    // if (!startTime) {
-    //     startTime = new Date();
-    // }
-    // console.log(startTime);
+    if (moves === 0) {
+        startGame();
+    }
 
     //
     if (isClicked === true) {
@@ -209,6 +230,7 @@ card.on('click', function () {
         openClass.push(picClass);
         clicked.addClass('open show locked');
         move();
+        // currentTime = new Date().getTime();
     }
 
     if (openCards.length === 2) {
@@ -217,7 +239,7 @@ card.on('click', function () {
             matchCards();
             correctPairs++;
             setTimeout(function () {
-                winGame();
+                endGame();
                 isClicked = false;
             }, 800);
         }
@@ -228,6 +250,7 @@ card.on('click', function () {
             console.log(wrongAnswer);
             setTimeout(function () {
                 flipCards();
+                endGame();
                 isClicked = false;
             }, 800);
         }
@@ -237,67 +260,8 @@ card.on('click', function () {
     }
 });
 
-// // event listener that works when a card  is clicked
-// card.on('click', function () {
-//     let clicked = $(this);
-//     let picClass = $(clicked).children().attr("class");
-//
-//     if (isClicked) {
-//         return
-//     }
-//
-//     if (clicked.hasClass('locked')){
-//         return;
-//     }
-//
-//     isClicked = true;
-//
-//     if (!startTime) {
-//         startTime = new Date();
-//     }
-//     console.log(startTime);
-//
-//     move();
-//
-//     clicked.addClass('open show locked');
-//
-//     if (openCards.length < 2) {
-//         openCards.push(clicked);
-//         openClass.push(picClass);
-//     }
-//
-//     if (openCards.length === 2) {
-//
-//         if (openClass[0] !== openClass[1]) {
-//             console.log(openCards);
-//             wrongCards();
-//             wrongAnswer++;
-//             console.log(wrongAnswer);
-//             setTimeout(function () {
-//                 flipCards();
-//                 // gameOver();
-//                 isClicked = false;
-//             }, 800);
-//             // wrongAnswer++;
-//             // console.log(wrongAnswer);
-//         }
-//         else {
-//             console.log(openCards);
-//             matchCards();
-//             clearArray(openClass);
-//             clearArray(openCards);
-//             correctPairs++;
-//             winGame();
-//             isClicked = false;
-//             // setTimeout(function () {
-//             //     winGame();
-//             // }, 2000);
-//         }
-//     } else {
-//         isClicked = false;
-//     }
-// });
-//
+
+
 
 console.log(openCards);
 
