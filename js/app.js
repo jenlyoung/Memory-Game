@@ -22,7 +22,7 @@ const cards = [
     {"name": "bomb1", "icon": "fa fa-bomb"},
     {"name": "bomb2", "icon": "fa fa-bomb"}
 ];
-
+let deck = (shuffle(cards));
 //variables for cards
 const card = $('.card'),
     cardIcon = $('.card i');
@@ -37,21 +37,22 @@ const stars = $('.stars i');
 const moveCount = $('.moves'),
     openCards = [],
     openClass = [];
+
 let moves = 0,
     correctPairs = 0,
     wrongAnswer = 1,
     isClicked = false,
     timeIntervalId,
+    timeElapsed,
 
 //variables for time counter
     startTime = null,
     endTime = null;
 
-
 //variables for modal
-var modal = document.querySelector(".modal");
-var trigger = document.querySelector(".trigger");
-var closeButton = document.querySelector(".close-button");
+// var modal = document.querySelector(".modal");
+// var trigger = document.querySelector(".trigger");
+// var closeButton = document.querySelector(".close-button");
 
 /*
  * Display the cards on the page
@@ -87,10 +88,11 @@ function placeCards(array) {
 placeCards(shuffle(cards));
 
 
-//event listener to restart game
-restart.on('click', function () {
-    startTime = null;
-    endTime = null;
+function clearBoard(){
+    clearInterval(timeIntervalId);
+    // startTime = null;
+    // endTime = null;
+    $( "#timer" ).html("0d 0h 0m 0s");
     card.removeClass('open show match fail bounce locked');
     cardIcon.removeClass();
     stars.removeClass('wrong');
@@ -99,7 +101,41 @@ restart.on('click', function () {
     wrongAnswer = 1;
     correctPairs = 0;
     placeCards(shuffle(cards));
-    console.log(deck);
+}
+//event listener to restart game
+restart.on('click', function () {
+    clearBoard();
+    // clearInterval(timeIntervalId);
+    // // startTime = null;
+    // // endTime = null;
+    // $( "#timer" ).empty();
+    // card.removeClass('open show match fail bounce locked');
+    // cardIcon.removeClass();
+    // stars.removeClass('wrong');
+    // moveCount.html('0');
+    // moves = 0;
+    // wrongAnswer = 1;
+    // correctPairs = 0;
+    // placeCards(shuffle(cards));
+});
+
+// // event listener for playagain button
+const playAgain = $('.playAgain');
+playAgain.on('click', function () {
+    modal.style.display = "none";
+    clearBoard();
+    // clearInterval(timeIntervalId);
+    // // startTime = null;
+    // // endTime = null;
+    // $( "#timer" ).empty();
+    // card.removeClass('open show match fail bounce locked');
+    // cardIcon.removeClass();
+    // stars.removeClass('wrong');
+    // moveCount.html('0');
+    // moves = 0;
+    // wrongAnswer = 1;
+    // correctPairs = 0;
+    // placeCards(shuffle(cards));
 });
 
 //function that adds match and bounce animation is cards match
@@ -119,8 +155,8 @@ function wrongCards() {
 
 // clears the arrays
 function clearArray() {
-    openCards.splice(0,2);
-    openClass.splice(0,2);
+    openCards.splice(0, 2);
+    openClass.splice(0, 2);
 }
 
 // if cards do not match, cards flip over and arrays clear
@@ -158,15 +194,16 @@ function move() {
 }
 
 function endGame() {
-    const isGameOver = wrongAnswer === 5 || correctPairs === 8;
-    if (!isGameOver){
+    const isGameOver = wrongAnswer === 5 || correctPairs === 1;
+    if (!isGameOver) {
         return;
     }
     if (wrongAnswer === 5) {
-        // toggleModal();
+        openModal();
         console.log("game over");
     }
     if (correctPairs === 8) {
+        // openModal();
         console.log("you win");
     }
     clearInterval(timeIntervalId);
@@ -176,13 +213,12 @@ function startGame() {
     startTime = new Date().getTime();
 
     // Update the count down every 1 second
-    timeIntervalId = setInterval(function() {
-        console.log("h");
+    timeIntervalId = setInterval(function () {
         // Get current time
         let currentTime = new Date().getTime();
 
         // have the startTime begin at 0
-        let totalTime =  currentTime - startTime;
+        let totalTime = currentTime - startTime;
 
         // Time calculations for days, hours, minutes and seconds
         var days = Math.floor(totalTime / (1000 * 60 * 60 * 24));
@@ -191,8 +227,14 @@ function startGame() {
         var seconds = Math.floor((totalTime % (1000 * 60)) / 1000);
 
         // Output the result in an element with id="timer"
-        document.getElementById("timer").innerHTML = days + "d " + hours + "h "
-            + minutes + "m " + seconds + "s ";
+        // document.getElementById("timer").innerHTML =
+
+        $( "#timer" ).html(days + "d " + hours + "h "
+            + minutes + "m " + seconds + "s ");
+
+        //creates a variable with final time for modal
+        timeElapsed = days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
+        document.getElementById("timeCompleted").innerHTML = timeElapsed;
     }, 1000);
 }
 
@@ -220,10 +262,6 @@ card.on('click', function () {
     // when clicked
     isClicked = true;
 
-    if (moves === 0) {
-        startGame();
-    }
-
     //
     if (isClicked === true) {
         openCards.push(clicked);
@@ -231,6 +269,11 @@ card.on('click', function () {
         clicked.addClass('open show locked');
         move();
         // currentTime = new Date().getTime();
+    }
+
+    //start timer
+    if (moves === 1) {
+        startGame();
     }
 
     if (openCards.length === 2) {
@@ -247,7 +290,8 @@ card.on('click', function () {
         else {
             wrongCards();
             wrongAnswer++;
-            console.log(wrongAnswer);
+            // console.log(wrongAnswer);
+            $('.num-wrong').html(wrongAnswer -1);
             setTimeout(function () {
                 flipCards();
                 endGame();
@@ -261,16 +305,44 @@ card.on('click', function () {
 });
 
 
-
-
 console.log(openCards);
 
 
-// function toggleModal() {
-//     $('.modal-content').html("<h>test</h>");
-//     modal.classList.toggle("show-modal");
+// Get the modal
+var modal = document.getElementById('myModal');
+
+// Get the button that opens the modal
+var btn = document.getElementById("myBtn");
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
+
+// When the user clicks the button, open the modal
+function openModal() {
+    modal.style.display = "block";
+};
+
+
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() {
+    modal.style.display = "none";
+//
+}
+
+
+// When the user clicks anywhere outside of the modal, close it
+// function openModal(){
+//     modal.style.display = "none";
 // }
 
+// function toggleModal() {
+//     const timeMessage = "You got all 8 matches in " + endTime;
+//     // let endTime = $('#timer');
+//     $('.modal-content').append("<h1>Congratulations!</h1><p>timeMessage</p>");
+//     modal.classList.toggle("show-modal");
+// }
+//
 // closeButton.addEventListener("click", toggleModal);
 
 /*
