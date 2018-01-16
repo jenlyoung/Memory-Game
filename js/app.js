@@ -122,7 +122,8 @@ restart.on('click', function () {
 // // event listener for playagain button
 const playAgain = $('.playAgain');
 playAgain.on('click', function () {
-    modal.style.display = "none";
+    winModal.style.display = "none";
+    looseModal.style.display="none";
     clearBoard();
     // clearInterval(timeIntervalId);
     // // startTime = null;
@@ -136,6 +137,12 @@ playAgain.on('click', function () {
     // wrongAnswer = 1;
     // correctPairs = 0;
     // placeCards(shuffle(cards));
+});
+
+const closeButton = $('.closeButton');
+closeButton.on('click', function (){
+    winModal.style.display = "none";
+    looseModal.style.display="none";
 });
 
 //function that adds match and bounce animation is cards match
@@ -199,11 +206,11 @@ function endGame() {
         return;
     }
     if (wrongAnswer === 5) {
-        openModal();
+        openLooseModal();
         console.log("game over");
     }
-    if (correctPairs === 8) {
-        // openModal();
+    if (correctPairs === 1) {
+        openWinModal();
         console.log("you win");
     }
     clearInterval(timeIntervalId);
@@ -309,26 +316,30 @@ console.log(openCards);
 
 
 // Get the modal
-var modal = document.getElementById('myModal');
+// var modal = document.getElementById('myModal');
+const winModal = document.getElementById('winModal');
+const looseModal = document.getElementById('looseModal');
 
-// Get the button that opens the modal
-var btn = document.getElementById("myBtn");
+// // Get the button that opens the modal
+// var btn = document.getElementById("myBtn");
 
 // Get the <span> element that closes the modal
-var span = document.getElementsByClassName("close")[0];
+// const span = document.getElementsByClassName("close")[0];
 
 // When the user clicks the button, open the modal
-function openModal() {
-    modal.style.display = "block";
+function openWinModal() {
+    winModal.style.display = "block";
 };
 
-
+function openLooseModal() {
+    looseModal.style.display = "block";
+};
 
 // When the user clicks on <span> (x), close the modal
-span.onclick = function() {
-    modal.style.display = "none";
-//
-}
+// span.on('click', function() {
+//     looseModal.style.display = "none";
+//     winModal.style.dislay = "none";
+// })
 
 
 // When the user clicks anywhere outside of the modal, close it
