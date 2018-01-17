@@ -1,7 +1,3 @@
-/*
- * Create a list that holds all of your cards
- */
-
 // var cards = ['diamond', 'diamond', 'paper-plane-o', 'paper-plane-o', 'anchor', 'anchor', 'bolt', 'bolt', 'cube', 'cube', 'leaf', 'leaf', 'bicycle', 'bicycle', 'bomb', 'bomb'];
 //variable for the cards
 const cards = [
@@ -22,10 +18,11 @@ const cards = [
     {"name": "bomb1", "icon": "fa fa-bomb"},
     {"name": "bomb2", "icon": "fa fa-bomb"}
 ];
-let deck = (shuffle(cards));
+
 //variables for cards
 const card = $('.card'),
     cardIcon = $('.card i');
+let deck = (shuffle(cards));
 
 //variable for restart
 const restart = $('.restart');
@@ -42,26 +39,24 @@ let moves = 0,
     correctPairs = 0,
     wrongAnswer = 1,
     isClicked = false,
-    timeIntervalId,
-    timeElapsed,
+    // timeIntervalId,
+    // timeElapsed,
 
 //variables for time counter
-    startTime = null,
-    endTime = null;
+    timeIntervalId,
+    timeElapsed;
 
-//variables for modal
-// var modal = document.querySelector(".modal");
-// var trigger = document.querySelector(".trigger");
-// var closeButton = document.querySelector(".close-button");
+//variables for modals
+const playAgain = $('.play-again'),
+    showAll = $('.show-all');
+closeButton = $('.close-button');
 
-/*
- * Display the cards on the page
- *   - shuffle the list of cards using the provided "shuffle" method below
- *   - loop through each card and create its HTML
- *   - add each card's HTML to the page
- */
+const winModal = document.getElementById('winModal');
+const looseModal = document.getElementById('looseModal');
 
-// // Shuffle function from http://stackoverflow.com/a/2450976
+
+//functions to place cards--shuffle and place cards
+// Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
     var currentIndex = array.length, temporaryValue, randomIndex;
 
@@ -85,14 +80,13 @@ function placeCards(array) {
         index++;
     });
 }
+
 placeCards(shuffle(cards));
 
-
-function clearBoard(){
+//function to clear board and restart game
+function clearBoard() {
     clearInterval(timeIntervalId);
-    // startTime = null;
-    // endTime = null;
-    $( "#timer" ).html("0d 0h 0m 0s");
+    $("#timer").html("0d 0h 0m 0s");
     card.removeClass('open show match fail bounce locked');
     cardIcon.removeClass();
     stars.removeClass('wrong');
@@ -102,55 +96,19 @@ function clearBoard(){
     correctPairs = 0;
     placeCards(shuffle(cards));
 }
+
+// clears the arrays
+function clearArray() {
+    openCards.splice(0, 2);
+    openClass.splice(0, 2);
+}
+
 //event listener to restart game
 restart.on('click', function () {
     clearBoard();
-    // clearInterval(timeIntervalId);
-    // // startTime = null;
-    // // endTime = null;
-    // $( "#timer" ).empty();
-    // card.removeClass('open show match fail bounce locked');
-    // cardIcon.removeClass();
-    // stars.removeClass('wrong');
-    // moveCount.html('0');
-    // moves = 0;
-    // wrongAnswer = 1;
-    // correctPairs = 0;
-    // placeCards(shuffle(cards));
 });
 
-// // event listener for playagain button
-const playAgain = $('.playAgain');
-playAgain.on('click', function () {
-    winModal.style.display = "none";
-    looseModal.style.display="none";
-    clearBoard();
-    // clearInterval(timeIntervalId);
-    // // startTime = null;
-    // // endTime = null;
-    // $( "#timer" ).empty();
-    // card.removeClass('open show match fail bounce locked');
-    // cardIcon.removeClass();
-    // stars.removeClass('wrong');
-    // moveCount.html('0');
-    // moves = 0;
-    // wrongAnswer = 1;
-    // correctPairs = 0;
-    // placeCards(shuffle(cards));
-});
-
-const showAll = $('.show-all');
-showAll.on('click', function (){
-    card.addClass('open show');
-    looseModal.style.display="none";
-})
-
-const closeButton = $('.closeButton');
-closeButton.on('click', function (){
-    winModal.style.display = "none";
-    looseModal.style.display="none";
-    clearBoard();
-});
+//functions for animation of game when played
 
 //function that adds match and bounce animation is cards match
 function matchCards() {
@@ -167,21 +125,11 @@ function wrongCards() {
     placeStars(wrongAnswer);
 }
 
-// clears the arrays
-function clearArray() {
-    openCards.splice(0, 2);
-    openClass.splice(0, 2);
-}
-
 // if cards do not match, cards flip over and arrays clear
 function flipCards() {
     if (wrongAnswer < 5) {
-        for (const openCard of openCards) {
-            openCard.removeClass('open show fail bounce locked');
-        }
-    }
-    else {
-        // gameOver();
+        openCards[0].removeClass('open show fail bounce locked');
+        openCards[1].removeClass('open show fail bounce locked');
     }
 }
 
@@ -199,7 +147,6 @@ function placeStars(x) {
     if (x === 4) {
         $('.star-4').addClass('wrong');
     }
-
 }
 
 function move() {
@@ -207,23 +154,7 @@ function move() {
     $('.moves').html(moves);
 }
 
-function endGame() {
-    const isGameOver = wrongAnswer === 5 || correctPairs === 1;
-    if (!isGameOver) {
-        return;
-    }
-    if (wrongAnswer === 5) {
-        openLooseModal();
-        console.log("game over");
-    }
-    if (correctPairs === 1) {
-        $('.num-wrong').html(wrongAnswer - 1);
-        openWinModal();
-        console.log("you win");
-    }
-    clearInterval(timeIntervalId);
-}
-
+//function to start timer
 function startGame() {
     startTime = new Date().getTime();
 
@@ -244,7 +175,7 @@ function startGame() {
         // Output the result in an element with id="timer"
         // document.getElementById("timer").innerHTML =
 
-        $( "#timer" ).html(days + "d " + hours + "h "
+        $("#timer").html(days + "d " + hours + "h "
             + minutes + "m " + seconds + "s ");
 
         //creates a variable with final time for modal
@@ -253,38 +184,44 @@ function startGame() {
     }, 1000);
 }
 
-// function gets the result of time elapsed in seconds
-// function diffTime(t2, t1) {
-//     let diffTime = t2.getTime() - t1.getTime(); // This will give difference in milliseconds
-//     let resultInSeconds = Math.round(diffTime / 1000);
-//     return resultInSeconds;
-// }
+//function to end game and pop up modal
+function endGame() {
+    const isGameOver = wrongAnswer === 5 || correctPairs === 1;
+    if (!isGameOver) {
+        return;
+    }
+    if (wrongAnswer === 5) {
+        openLooseModal();
+        console.log("game over");
+    }
+    if (correctPairs === 8) {
+        $('.num-wrong').html(wrongAnswer - 1);
+        openWinModal();
+        console.log("you win");
+    }
+    clearInterval(timeIntervalId);
+}
+
 
 card.on('click', function () {
     let clicked = $(this);
     let picClass = $(clicked).children().attr("class");
-
-    //if array if full, clear the array
-    if (openCards.length === 2) {
-        clearArray();
-    }
 
     // card open already, exit
     if (clicked.hasClass('locked')) {
         return;
     }
 
+    if (isClicked) {
+        return;
+    }
+
     // when clicked
     isClicked = true;
-
-    //
-    if (isClicked === true) {
-        openCards.push(clicked);
-        openClass.push(picClass);
-        clicked.addClass('open show locked');
-        move();
-        // currentTime = new Date().getTime();
-    }
+    openCards.push(clicked);
+    openClass.push(picClass);
+    clicked.addClass('open show locked');
+    move();
 
     //start timer
     if (moves === 1) {
@@ -299,6 +236,7 @@ card.on('click', function () {
             setTimeout(function () {
                 endGame();
                 isClicked = false;
+                clearArray();
             }, 800);
         }
         //no match
@@ -306,12 +244,13 @@ card.on('click', function () {
             wrongCards();
             wrongAnswer++;
             // console.log(wrongAnswer);
-            $('.num-wrong').html(wrongAnswer -1);
+            $('.num-wrong').html(wrongAnswer - 1);
             setTimeout(function () {
                 flipCards();
                 endGame();
                 isClicked = false;
-            }, 800);
+                clearArray();
+            }, 1000);
         }
     }
     else {
@@ -319,22 +258,27 @@ card.on('click', function () {
     }
 });
 
+//functions for the modals
+// event listener for play again button
+playAgain.on('click', function () {
+    winModal.style.display = "none";
+    looseModal.style.display = "none";
+    clearBoard();
+});
 
-console.log(openCards);
+//event listener for reveal all button
+showAll.on('click', function () {
+    card.addClass('open show locked');
+    looseModal.style.display = "none";
+})
 
+// const closeButton = $('.close-button');
+closeButton.on('click', function () {
+    winModal.style.display = "none";
+    looseModal.style.display = "none";
+    clearBoard();
+});
 
-// Get the modal
-// var modal = document.getElementById('myModal');
-const winModal = document.getElementById('winModal');
-const looseModal = document.getElementById('looseModal');
-
-// // Get the button that opens the modal
-// var btn = document.getElementById("myBtn");
-
-// Get the <span> element that closes the modal
-// const span = document.getElementsByClassName("close")[0];
-
-// When the user clicks the button, open the modal
 function openWinModal() {
     winModal.style.display = "flex";
 };
@@ -343,35 +287,6 @@ function openLooseModal() {
     looseModal.style.display = "flex";
 };
 
-// When the user clicks on <span> (x), close the modal
-// span.on('click', function() {
-//     looseModal.style.display = "none";
-//     winModal.style.dislay = "none";
-// })
 
 
-// When the user clicks anywhere outside of the modal, close it
-// function openModal(){
-//     modal.style.display = "none";
-// }
-
-// function toggleModal() {
-//     const timeMessage = "You got all 8 matches in " + endTime;
-//     // let endTime = $('#timer');
-//     $('.modal-content').append("<h1>Congratulations!</h1><p>timeMessage</p>");
-//     modal.classList.toggle("show-modal");
-// }
-//
-// closeButton.addEventListener("click", toggleModal);
-
-/*
- * set up the event listener for a card. If a card is clicked:
- *  - display the card's symbol (put this functionality in another function that you call from this one)
- *  - add the card to a *list* of "open" cards (put this functionality in another function that you call from this one)
- *  - if the list already has another card, check to see if the two cards match
- *    + if the cards do match, lock the cards in the open position (put this functionality in another function that you call from this one)
- *    + if the cards do not match, remove the cards from the list and hide the card's symbol (put this functionality in another function that you call from this one)
- *    + increment the move counter and display it on the page (put this functionality in another function that you call from this one)
- *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
- */
 
