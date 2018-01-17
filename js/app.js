@@ -139,10 +139,17 @@ playAgain.on('click', function () {
     // placeCards(shuffle(cards));
 });
 
+const showAll = $('.show-all');
+showAll.on('click', function (){
+    card.addClass('open show');
+    looseModal.style.display="none";
+})
+
 const closeButton = $('.closeButton');
 closeButton.on('click', function (){
     winModal.style.display = "none";
     looseModal.style.display="none";
+    clearBoard();
 });
 
 //function that adds match and bounce animation is cards match
@@ -210,6 +217,7 @@ function endGame() {
         console.log("game over");
     }
     if (correctPairs === 1) {
+        $('.num-wrong').html(wrongAnswer - 1);
         openWinModal();
         console.log("you win");
     }
@@ -328,11 +336,11 @@ const looseModal = document.getElementById('looseModal');
 
 // When the user clicks the button, open the modal
 function openWinModal() {
-    winModal.style.display = "block";
+    winModal.style.display = "flex";
 };
 
 function openLooseModal() {
-    looseModal.style.display = "block";
+    looseModal.style.display = "flex";
 };
 
 // When the user clicks on <span> (x), close the modal
