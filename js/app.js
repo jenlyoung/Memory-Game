@@ -22,7 +22,7 @@ const cards = [
 //variables for cards
 const card = $('.card'),
     cardIcon = $('.card i');
-let deck = (shuffle(cards));
+// let deck = (shuffle(cards));
 
 //variable for restart
 const restart = $('.restart');
@@ -39,8 +39,6 @@ let moves = 0,
     correctPairs = 0,
     wrongAnswer = 1,
     isClicked = false,
-    // timeIntervalId,
-    // timeElapsed,
 
 //variables for time counter
     timeIntervalId,
@@ -48,17 +46,16 @@ let moves = 0,
 
 //variables for modals
 const playAgain = $('.play-again'),
-    showAll = $('.show-all');
-closeButton = $('.close-button');
+    revealAll = $('.reveal-all'),
+    closeButton = $('.close-button');
 
 const winModal = document.getElementById('winModal');
 const looseModal = document.getElementById('looseModal');
 
-
 //functions to place cards--shuffle and place cards
 // Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
-    var currentIndex = array.length, temporaryValue, randomIndex;
+    let currentIndex = array.length, temporaryValue, randomIndex;
 
     while (currentIndex !== 0) {
         randomIndex = Math.floor(Math.random() * currentIndex);
@@ -71,7 +68,7 @@ function shuffle(array) {
 }
 
 // function that places an icon on each card
-function placeCards(array) {
+function placeCards(x) {
     let index = 0;
     moveCount.html('0');
     cardIcon.each(function () {
@@ -80,7 +77,6 @@ function placeCards(array) {
         index++;
     });
 }
-
 placeCards(shuffle(cards));
 
 //function to clear board and restart game
@@ -97,7 +93,7 @@ function clearBoard() {
     placeCards(shuffle(cards));
 }
 
-// clears the arrays
+// clears the array of open cards
 function clearArray() {
     openCards.splice(0, 2);
     openClass.splice(0, 2);
@@ -149,6 +145,7 @@ function placeStars(x) {
     }
 }
 
+// increments the moves
 function move() {
     moves++;
     $('.moves').html(moves);
@@ -158,7 +155,7 @@ function move() {
 function startGame() {
     startTime = new Date().getTime();
 
-    // Update the count down every 1 second
+    // Update the time every 1 second
     timeIntervalId = setInterval(function () {
         // Get current time
         let currentTime = new Date().getTime();
@@ -167,42 +164,76 @@ function startGame() {
         let totalTime = currentTime - startTime;
 
         // Time calculations for days, hours, minutes and seconds
-        var days = Math.floor(totalTime / (1000 * 60 * 60 * 24));
-        var hours = Math.floor((totalTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        var minutes = Math.floor((totalTime % (1000 * 60 * 60)) / (1000 * 60));
-        var seconds = Math.floor((totalTime % (1000 * 60)) / 1000);
+        let days = Math.floor(totalTime / (1000 * 60 * 60 * 24));
+        let hours = Math.floor((totalTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        let minutes = Math.floor((totalTime % (1000 * 60 * 60)) / (1000 * 60));
+        let seconds = Math.floor((totalTime % (1000 * 60)) / 1000);
 
         // Output the result in an element with id="timer"
-        // document.getElementById("timer").innerHTML =
-
         $("#timer").html(days + "d " + hours + "h "
             + minutes + "m " + seconds + "s ");
 
-        //creates a variable with final time for modal
+        //creates a variable with final time for modal and adds it to the HTML
         timeElapsed = days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
         document.getElementById("timeCompleted").innerHTML = timeElapsed;
     }, 1000);
 }
 
+
+//functions for the modals
+
+// event listener for play again button
+playAgain.on('click', function () {
+    winModal.style.display = "none";
+    looseModal.style.display = "none";
+    clearBoard();
+});
+
+//event listener for reveal all button
+revealAll.on('click', function () {
+    card.addClass('open show locked');
+    looseModal.style.display = "none";
+});
+
+// const closeButton = $('.close-button');
+closeButton.on('click', function () {
+    winModal.style.display = "none";
+    looseModal.style.display = "none";
+    clearBoard();
+});
+
+function openWinModal() {
+    winModal.style.display = "flex";
+}
+
+function openLooseModal() {
+    looseModal.style.display = "flex";
+}
+
 //function to end game and pop up modal
 function endGame() {
-    const isGameOver = wrongAnswer === 5 || correctPairs === 1;
+    const isGameOver = wrongAnswer === 5 || correctPairs === 8;
     if (!isGameOver) {
         return;
     }
     if (wrongAnswer === 5) {
         openLooseModal();
-        console.log("game over");
     }
     if (correctPairs === 8) {
         $('.num-wrong').html(wrongAnswer - 1);
         openWinModal();
-        console.log("you win");
     }
     clearInterval(timeIntervalId);
 }
-
-
+/**
+ * @ description: onclick function that:
+ * adds open cards to an array and clear the array after 2 cards are clicked
+ * open and closes cards when clicked
+ * changes colors of cards based on correct or wrong answer
+ * adds animation when a pair of cards has been clicked
+ * ends game
+ *
+ */
 card.on('click', function () {
     let clicked = $(this);
     let picClass = $(clicked).children().attr("class");
@@ -257,36 +288,6 @@ card.on('click', function () {
         isClicked = false;
     }
 });
-
-//functions for the modals
-// event listener for play again button
-playAgain.on('click', function () {
-    winModal.style.display = "none";
-    looseModal.style.display = "none";
-    clearBoard();
-});
-
-//event listener for reveal all button
-showAll.on('click', function () {
-    card.addClass('open show locked');
-    looseModal.style.display = "none";
-})
-
-// const closeButton = $('.close-button');
-closeButton.on('click', function () {
-    winModal.style.display = "none";
-    looseModal.style.display = "none";
-    clearBoard();
-});
-
-function openWinModal() {
-    winModal.style.display = "flex";
-};
-
-function openLooseModal() {
-    looseModal.style.display = "flex";
-};
-
 
 
 
