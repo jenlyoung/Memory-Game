@@ -7,14 +7,12 @@
 
 ## Instructions
 
-The starter project has some HTML and CSS styling to display a static version of the Memory Game project. You'll need to convert this project from a static project to an interactive one. This will require modifying the HTML and CSS files, but primarily the JavaScript file.
-
-To get started, open `js/app.js` and start building out the app's functionality
-
-For specific, detailed instructions, look at the project instructions in the [Udacity Classroom](https://classroom.udacity.com/me).
+Click on the cards to see if you can get a match!  You only get 4 wrong matches, so choose wisely!
 
 ## Contributing
 
-This repository is the starter code for _all_ Udacity students. Therefore, we most likely will not accept pull requests.
+* Some CSS and HTML were provided by Udacity to create the Memory Game.
+* Code to convert timer in d, h, m, s was from W3schools.com--How TO--JavaScript Countdown Timer
+* Code for Modal was adapted from W3school.com--How TO--CSS/JA Modal
+* Code for bounce animation was adapted from tutoralspoint CSS--Bounce Effect
 
-For details, check out [CONTRIBUTING.md](CONTRIBUTING.md).
