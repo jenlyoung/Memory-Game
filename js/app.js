@@ -46,11 +46,8 @@ let moves = 0,
 
 //variables for modals
 const playAgain = $('.play-again'),
-    revealAll = $('.reveal-all'),
-    closeButton = $('.close-button');
-
-const winModal = document.getElementById('winModal');
-const looseModal = document.getElementById('looseModal');
+    closeButton = $('.close-button'),
+    winModal = document.getElementById('winModal');
 
 //functions to place cards--shuffle and place cards
 // Shuffle function from http://stackoverflow.com/a/2450976
@@ -85,7 +82,7 @@ function clearBoard() {
     $("#timer").html("0d 0h 0m 0s");
     card.removeClass('open show match fail bounce locked');
     cardIcon.removeClass();
-    stars.removeClass('wrong');
+    stars.removeClass('fa-star-o').addClass('fa-star');
     moveCount.html('0');
     moves = 0;
     wrongAnswer = 1;
@@ -123,25 +120,29 @@ function wrongCards() {
 
 // if cards do not match, cards flip over and arrays clear
 function flipCards() {
-    if (wrongAnswer < 5) {
+    if (wrongAnswer) {
         openCards[0].removeClass('open show fail bounce locked');
         openCards[1].removeClass('open show fail bounce locked');
     }
 }
 
-//function that colors the stars if there is a wrong answer
+//function that changes star type based on # wrong answers
 function placeStars(x) {
-    if (x === 1) {
-        $('.star-1').addClass('wrong');
+    if (x < 4){
+        $('.star-rate').html(3);
     }
-    if (x === 2) {
-        $('.star-2').addClass('wrong');
+    if (x === 5) {
+        $('.star-3').removeClass('fa-star').addClass('fa-star-o');
+        $('.star-rate').html(2);
     }
-    if (x === 3) {
-        $('.star-3').addClass('wrong');
+    if (x === 9) {
+        $('.star-2').removeClass('fa-star').addClass('fa-star-o');
+        $('.star-rate').html(1);
+
     }
-    if (x === 4) {
-        $('.star-4').addClass('wrong');
+    if (x === 13) {
+        $('.star-1').removeClass('fa-star').addClass('fa-star-o');
+        $('.star-rate').html(0);
     }
 }
 
@@ -185,20 +186,13 @@ function startGame() {
 // event listener for play again button
 playAgain.on('click', function () {
     winModal.style.display = "none";
-    looseModal.style.display = "none";
     clearBoard();
-});
-
-//event listener for reveal all button
-revealAll.on('click', function () {
-    card.addClass('open show locked');
-    looseModal.style.display = "none";
 });
 
 // const closeButton = $('.close-button');
 closeButton.on('click', function () {
     winModal.style.display = "none";
-    looseModal.style.display = "none";
+    // looseModal.style.display = "none";
     clearBoard();
 });
 
@@ -206,25 +200,13 @@ function openWinModal() {
     winModal.style.display = "flex";
 }
 
-function openLooseModal() {
-    looseModal.style.display = "flex";
+function endGame() {
+    if (correctPairs === 8) {
+        openWinModal();
+        clearInterval(timeIntervalId);
+    }
 }
 
-//function to end game and pop up modal
-function endGame() {
-    const isGameOver = wrongAnswer === 5 || correctPairs === 8;
-    if (!isGameOver) {
-        return;
-    }
-    if (wrongAnswer === 5) {
-        openLooseModal();
-    }
-    if (correctPairs === 8) {
-        $('.num-wrong').html(wrongAnswer - 1);
-        openWinModal();
-    }
-    clearInterval(timeIntervalId);
-}
 /**
  * @ description: onclick function that:
  * adds open cards to an array and clear the array after 2 cards are clicked
@@ -274,11 +256,9 @@ card.on('click', function () {
         else {
             wrongCards();
             wrongAnswer++;
-            // console.log(wrongAnswer);
             $('.num-wrong').html(wrongAnswer - 1);
             setTimeout(function () {
                 flipCards();
-                endGame();
                 isClicked = false;
                 clearArray();
             }, 1000);

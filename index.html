@@ -15,15 +15,12 @@
         <header>
             <h1>Matching Game</h1>
         </header>
-        <!--<p class="time">Time elapsed: <span Id="timer">0d 0h 0m 0s</span></p>-->
         <section class="score-panel">
         	<ul class="stars">
                 <!--i tag allows you to use the Font Awesome Icons-->
         		<li><i class="fa fa-star star-1"></i></li>
         		<li><i class="fa fa-star star-2"></i></li>
         		<li><i class="fa fa-star star-3"></i></li>
-                <li><i class="fa fa-star star-4"></i></li>
-
             </ul>
             <p class="moves-content"><span class="moves">0</span> Moves</p>
             <p class="time">Time: <span Id="timer">0d 0h 0m 0s</span></p>
@@ -86,33 +83,15 @@
     </div>
 
     <div id="winModal" class="modal">
-
-        <!-- Modal content -->
         <div class="modal-content">
             <div class="close">
                 <span class="close-button">&times;</span>
             </div>
             <h1 class="modal-title">Congratulations!</h1>
             <p class="modal-message">You found all 8 matches in <span Id="timeCompleted"></span>!</p>
-            <p>You only got <span class="num-wrong"></span> matches wrong!</p>
+            <p>You earned <span class="star-rate"></span> stars!</p>
 
             <button class="play-again">Play Again!</button>
-        </div>
-
-    </div>
-
-    <div id="looseModal" class="modal">
-
-        <!-- Modal content -->
-        <div class="modal-content">
-            <div class="close">
-                <span class="close-button">&times;</span>
-            </div>
-            <h1 class="modal-title">Game Over!</h1>
-            <div class="loose-button">
-                <button class="play-again">Play Again!</button>
-                <button class="reveal-all">Reveal Cards?</button>
-            </div>
         </div>
 
     </div>

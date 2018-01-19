@@ -107,6 +107,7 @@ h1 {
 }
 
 .score-panel .stars li {
+    color: black;
     list-style: none;
     display: inline-block;
 }
@@ -121,9 +122,9 @@ h1 {
     cursor: pointer;
 }
 
-.score-panel .stars li .wrong {
-    color: red;
-}
+/*.score-panel .stars li .wrong {*/
+    /*color: red;*/
+/*}*/
 
 /*css for bounce animation*/
 .bounce {
@@ -169,7 +170,7 @@ h1 {
     top: 0;
     width: 100%; /* Full width */
     height: 100%; /* Full height */
-    /*overflow: auto; !* Enable scroll if needed *!*/
+    overflow: auto; /* Enable scroll if needed */
     background-color: rgb(0, 0, 0); /* Fallback color */
     background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
 }
@@ -178,7 +179,6 @@ h1 {
 .modal-content {
     display: flex;
     flex-direction: column;;
-    /*justify-content: space-between;*/
     align-items: center;
     background-color: #fefefe;
     margin: auto;
@@ -196,7 +196,6 @@ h1 {
 
 .close-button {
     color: #aaaaaa;
-    /*float: right;*/
     font-size: 28px;
     font-weight: bold;
 }
@@ -215,13 +214,6 @@ h1 {
     width: 100%;
 }
 
-.loose-button {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    width: 100%;
-}
-
 /*Play Again Button*/
 .play-again {
     background-color: #888;
@@ -231,7 +223,6 @@ h1 {
     margin: 10px;
     padding: 10px;
     width: 50%;
-
 }
 
 .play-again:hover {
@@ -240,19 +231,3 @@ h1 {
     cursor: pointer;
 }
 
-/*Show-all button*/
-.reveal-all {
-    background-color: #888;
-    color: white;
-    font-size: 16px;
-    justify-content: center;
-    margin: 10px;
-    padding: 10px;
-    width: 50%;
-}
-
-.reveal-all:hover {
-    background-color: #4CAF50; /* Green */
-    color: white;
-    cursor: pointer;
-}
