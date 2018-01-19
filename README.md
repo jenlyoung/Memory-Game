@@ -12,7 +12,7 @@ Once you get all 8 matches, the game is over and you will receive a star rating 
 
 ## How to Run the Game
 
-To run the game, click [here](https://github.com/jenlyoung/Memory-Game.git)
+To run the game, click [here](http://jenlyoung.github.io/Memory-Game/)
 
 ## Contributing
 
