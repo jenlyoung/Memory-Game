@@ -1,18 +1,30 @@
 # Memory Game Project
 
-## Table of Contents
+Welcome to my matching game! This game was designed as part of Udacity's Front-End Web Developer Nanodegree. Enjoy!
 
-* [Instructions](#instructions)
-* [Contributing](#contributing)
+## How to Play
 
-## Instructions
+There are 16 cards on a board and 8 matching pairs.  Click on the cards to reveal icons and see if you got a match!
 
-Click on the cards to see if you can get a match!  You only get 4 wrong matches, so choose wisely!
+If the cards match, they will remain open.  If they do not match, they will flip over and you can try again.
+
+Once you get all 8 matches, the game is over and you will receive a star rating based on how well you did.
+
+## How to Run the Game
+
+To run the game, click [here](https://github.com/jenlyoung/Memory-Game.git)
 
 ## Contributing
 
-* Some CSS and HTML were provided by Udacity to create the Memory Game.
-* Code to convert timer in d, h, m, s was from W3schools.com--How TO--JavaScript Countdown Timer
-* Code for Modal was adapted from W3school.com--How TO--CSS/JA Modal
-* Code for bounce animation was adapted from tutoralspoint CSS--Bounce Effect
+In addition to some CSS and HTML provided by Udacity, the following sources were helpful in writing this program:
+
+### Timer
+[How TO-JavaScript Countdown Timer](https://www.w3schools.com/howto/howto_js_countdown.asp)
+
+### Modal
+[How TO-CSS/JS Modal](https://www.w3schools.com/howto/howto_css_modals.asp)
+
+### Bounce Effect
+[CSS-Bounce Effect](https://www.tutorialspoint.com/css/css_animation_bounce.htm)
+
 
